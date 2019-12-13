@@ -7,7 +7,7 @@ public class SmartGhost extends Ghost {
         super(Map);
     }
 
-    private static class State implements Comparable {
+    private static class State implements Comparable<State> {
         private int distance, heuristic;
         private int x, y;
         private String path;
@@ -41,14 +41,8 @@ public class SmartGhost extends Ghost {
         }
 
         @Override
-        public int compareTo(Object o) {
-            if (o instanceof State) {
-                State T = (State) o;
-
-                return Integer.compare(getDistance() + getHeuristic(), T.getDistance() + T.getHeuristic());
-            } else {
-                return 0;
-            }
+        public int compareTo(State S) {
+            return Integer.compare(getDistance() + getHeuristic(), S.getDistance() + S.getHeuristic());
         }
     }
 
@@ -101,8 +95,7 @@ public class SmartGhost extends Ghost {
 
         char direction = chooseDirection(Map, PX, PY);
         int directionX = 0, directionY = 0;
-        switch (direction)
-        {
+        switch (direction) {
             case 'U':
                 directionX = 0;
                 directionY = -1;
@@ -121,8 +114,7 @@ public class SmartGhost extends Ghost {
                 break;
         }
 
-        if(Map[x + directionX][y + directionY] != '#')
-        {
+        if (Map[x + directionX][y + directionY] != '#') {
             x += directionX;
             y += directionY;
         }
