@@ -6,12 +6,13 @@ public class GreedyGhost extends Ghost {
     }
 
     public void move(char[][] Map) {
-        //PacMan x & y
+        //Closest PacMan x & y
         int PX = 0, PY = 0;
 
-        for (int i = 0; i < Map.length && PX == 0; ++i)
-            for (int j = 0; j < Map[i].length && PX == 0; ++j)
-                if (Map[i][j] == 'P') {
+        for (int i = 0; i < Map.length; ++i)
+            for (int j = 0; j < Map[i].length; ++j)
+                if (Map[i][j] == 'P' && ((PX == 0 && PY == 0) ||
+                        (Math.abs(x - PX) + Math.abs(y - PY)) > (Math.abs(x - i) + Math.abs(y - j)))) {
                     PX = i;
                     PY = j;
                 }

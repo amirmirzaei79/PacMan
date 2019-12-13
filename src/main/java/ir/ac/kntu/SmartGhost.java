@@ -46,7 +46,7 @@ public class SmartGhost extends Ghost {
         }
     }
 
-    private char chooseDirection(char[][] Map, int px, int py) {
+    private State chooseDirection(char[][] Map, int px, int py) {
         PriorityQueue<State> PQ = new PriorityQueue<>();
         State currentState = new State(0, x, y, px, py, "");
         State newState;
@@ -76,24 +76,26 @@ public class SmartGhost extends Ghost {
             currentState = PQ.poll();
         }
 
-        if (currentState != null)
-            return currentState.getPath().charAt(0);
-        else
-            return 'N';
+        return currentState;
     }
 
     public void move(char[][] Map) {
-        //PacMan x & y
-        int PX = 0, PY = 0;
+        char direction;
+        State bestPath = null, t;
 
-        for (int i = 0; i < Map.length && PX == 0; ++i)
-            for (int j = 0; j < Map[i].length && PX == 0; ++j)
+        for (int i = 0; i < Map.length; ++i)
+            for (int j = 0; j < Map[i].length; ++j)
                 if (Map[i][j] == 'P') {
-                    PX = i;
-                    PY = j;
+                    t = chooseDirection(Map, i, j);
+                    if (t != null && (bestPath == null || bestPath.getDistance() > t.getDistance()))
+                        bestPath = t;
                 }
 
-        char direction = chooseDirection(Map, PX, PY);
+        if (bestPath != null)
+            direction = bestPath.getPath().charAt(0);
+        else
+            direction = 'N';
+
         int directionX = 0, directionY = 0;
         switch (direction) {
             case 'U':
