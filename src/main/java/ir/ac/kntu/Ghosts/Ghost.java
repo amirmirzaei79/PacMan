@@ -1,4 +1,4 @@
-package ir.ac.kntu;
+package ir.ac.kntu.Ghosts;
 
 public class Ghost {
     protected int x, y;

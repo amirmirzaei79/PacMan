@@ -1,4 +1,4 @@
-package ir.ac.kntu;
+package ir.ac.kntu.Ghosts;
 
 public class VerticalRandomGhost extends Ghost {
     public VerticalRandomGhost(char[][] Map) {

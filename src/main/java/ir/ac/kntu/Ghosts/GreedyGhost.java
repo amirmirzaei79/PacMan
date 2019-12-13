@@ -1,4 +1,4 @@
-package ir.ac.kntu;
+package ir.ac.kntu.Ghosts;
 
 public class GreedyGhost extends Ghost {
     public GreedyGhost(char[][] Map) {

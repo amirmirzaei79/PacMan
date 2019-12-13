@@ -1,4 +1,4 @@
-package ir.ac.kntu;
+package ir.ac.kntu.Ghosts;
 
 public class RandomGhost extends Ghost {
     public RandomGhost(char[][] Map) {

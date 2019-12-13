@@ -1,8 +1,8 @@
-package ir.ac.kntu;
+package ir.ac.kntu.Ghosts;
 
 import java.util.Map;
 
-public class HorizontalRandomGhost extends ir.ac.kntu.Ghost {
+public class HorizontalRandomGhost extends Ghost {
     public HorizontalRandomGhost(char[][] Map) {
         super(Map);
         while (Map[x + 1][y] == '#' && Map[x - 1][y] == '#') {
