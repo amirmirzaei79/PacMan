@@ -1,7 +1,6 @@
 package ir.ac.kntu.PacMans;
 
 import ir.ac.kntu.Ghosts.Ghost;
-import javafx.geometry.Pos;
 
 import java.util.LinkedList;
 import java.util.Queue;

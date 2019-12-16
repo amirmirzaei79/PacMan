@@ -18,14 +18,16 @@ public class PacMan {
             this.x = x;
             this.y = y;
             this.direction = direction;
+            Map[x][y] = 'P';
             return true;
         }
         else
             return false;
     }
 
-    public void move(char[][] Map) {
+    public char move(char[][] Map) {
         int directionX = 0, directionY = 0;
+        char returnValue = ' ';
         switch (direction) {
             case 'U':
                 directionX = 0;
@@ -46,9 +48,14 @@ public class PacMan {
         }
 
         if (Map[x + directionX][y + directionY] != '#') {
+            Map[x][y] = ' ';
             x += directionX;
             y += directionY;
+            returnValue = Map[x][y];
+            Map[x][y] = 'P';
         }
+
+        return returnValue;
     }
 
     public int getX() {
@@ -59,15 +66,23 @@ public class PacMan {
         return y;
     }
 
-    public int getPoint() {
+    public int getPoints() {
         return points;
+    }
+
+    public char getDirection() {
+        return direction;
     }
 
     public boolean isAlive() {
         return isAlive;
     }
 
-    public void die(char[][] Map) {
+    public int getLives() {
+        return lives;
+    }
+
+    public void die() {
         --lives;
         if (lives <= 0)
             isAlive = false;

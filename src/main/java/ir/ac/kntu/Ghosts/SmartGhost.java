@@ -1,10 +1,12 @@
 package ir.ac.kntu.Ghosts;
 
+import java.util.Arrays;
 import java.util.PriorityQueue;
 
 public class SmartGhost extends Ghost {
     public SmartGhost(char[][] Map) {
         super(Map);
+        imagePath = "file:src/main/java/ir/ac/kntu/Images/Red_Ghost.png";
     }
 
     private static class State implements Comparable<State> {
@@ -51,26 +53,34 @@ public class SmartGhost extends Ghost {
         State currentState = new State(0, x, y, px, py, "");
         State newState;
         int currentX, currentY;
-        PQ.add(currentState);
+        boolean[][] mark = new boolean[Map.length][Map[0].length];
+
+        for (boolean[] booleans : mark) {
+            Arrays.fill(booleans, true);
+        }
 
         while (currentState != null && currentState.getHeuristic() != 0) {
             currentX = currentState.getX();
             currentY = currentState.getY();
-            if (Map[currentX][currentY - 1] != '#') {
+            if (Map[currentX][currentY - 1] != '#' && mark[currentX][currentY - 1]) {
                 newState = new State(currentState.getDistance() + 1, currentX, currentY - 1, px, py, currentState.getPath() + "U");
                 PQ.add(newState);
+                mark[currentX][currentY - 1] = false;
             }
-            if (Map[currentX][currentY + 1] != '#') {
+            if (Map[currentX][currentY + 1] != '#' && mark[currentX][currentY + 1]) {
                 newState = new State(currentState.getDistance() + 1, currentX, currentY + 1, px, py, currentState.getPath() + "D");
                 PQ.add(newState);
+                mark[currentX][currentY + 1] = false;
             }
-            if (Map[currentX - 1][currentY] != '#') {
+            if (Map[currentX - 1][currentY] != '#' && mark[currentX - 1][currentY]) {
                 newState = new State(currentState.getDistance() + 1, currentX - 1, currentY, px, py, currentState.getPath() + "L");
                 PQ.add(newState);
+                mark[currentX - 1][currentY] = false;
             }
-            if (Map[currentX][currentY + 1] != '#') {
+            if (Map[currentX + 1][currentY] != '#' && mark[currentX + 1][currentY]) {
                 newState = new State(currentState.getDistance() + 1, currentX + 1, currentY, px, py, currentState.getPath() + "R");
                 PQ.add(newState);
+                mark[currentX + 1][currentY] = false;
             }
 
             currentState = PQ.poll();
@@ -79,7 +89,9 @@ public class SmartGhost extends Ghost {
         return currentState;
     }
 
-    public void move(char[][] Map) {
+    public void move(char[][] Map, Ghost[] ghosts) {
+        Map = ghostToBlock(Map, ghosts);
+
         char direction;
         State bestPath = null, t;
 
@@ -91,7 +103,7 @@ public class SmartGhost extends Ghost {
                         bestPath = t;
                 }
 
-        if (bestPath != null)
+        if (bestPath != null && bestPath.getPath().length() > 0)
             direction = bestPath.getPath().charAt(0);
         else
             direction = 'N';
@@ -116,7 +128,7 @@ public class SmartGhost extends Ghost {
                 break;
         }
 
-        if (Map[x + directionX][y + directionY] != '#') {
+        if (isActive && Map[x + directionX][y + directionY] != '#') {
             x += directionX;
             y += directionY;
         }
