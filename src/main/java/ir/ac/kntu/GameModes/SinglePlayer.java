@@ -53,9 +53,12 @@ public class SinglePlayer extends GameMode {
         }
     }
 
-    private void initPacMan() {
+    private void initPacMan() throws FileNotFoundException {
+        Scanner in = new Scanner(new File("src/main/java/ir/ac/kntu/Maps/DefaultPacManPositions.txt"));
+        int x = in.nextInt();
+        int y = in.nextInt();
         pacman = new PacMan();
-        pacman.init(Map, Map.length / 2, Map[0].length / 2, 'N');
+        pacman.init(Map, x, y, 'N');
     }
     //End of Init Block
 
