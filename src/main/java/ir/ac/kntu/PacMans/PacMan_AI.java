@@ -42,37 +42,46 @@ public class PacMan_AI extends PacMan {
         currentPos.x = x;
         currentPos.y = y;
         currentPos.path = "";
+        boolean [][]mark = new boolean[Map.length][Map[0].length];
+        for(int i = 0; i < mark.length; ++i)
+            for(int j = 0; j < mark[i].length; ++j)
+                mark[i][j] = true;
+
         while (currentPos != null && Map[currentPos.x][currentPos.y] != '.') {
             X = currentPos.x;
             Y = currentPos.y;
 
-            if (Map[X + 1][Y] != '#') {
+            if (Map[X + 1][Y] != '#' && mark[X + 1][Y]) {
                 childPos = new Position();
                 childPos.x = X + 1;
                 childPos.y = Y;
-                childPos.path = currentPos.path + 'L';
+                childPos.path = currentPos.path + 'R';
                 BFSQ.add(childPos);
+                mark[X + 1][Y] = false;
             }
-            if (Map[X - 1][Y] != '#') {
+            if (Map[X - 1][Y] != '#' && mark[X - 1][Y]) {
                 childPos = new Position();
                 childPos.x = X - 1;
                 childPos.y = Y;
-                childPos.path = currentPos.path + 'R';
+                childPos.path = currentPos.path + 'L';
                 BFSQ.add(childPos);
+                mark[X - 1][Y] = false;
             }
-            if (Map[X][Y + 1] != '#') {
+            if (Map[X][Y + 1] != '#' && mark[X][Y + 1]) {
                 childPos = new Position();
                 childPos.x = X;
                 childPos.y = Y + 1;
                 childPos.path = currentPos.path + 'D';
                 BFSQ.add(childPos);
+                mark[X][Y + 1] = false;
             }
-            if (Map[X][Y - 1] != '#') {
+            if (Map[X][Y - 1] != '#' && mark[X][Y - 1]) {
                 childPos = new Position();
                 childPos.x = X;
                 childPos.y = Y - 1;
                 childPos.path = currentPos.path + 'U';
                 BFSQ.add(childPos);
+                mark[X][Y - 1] = false;
             }
 
             currentPos = BFSQ.poll();

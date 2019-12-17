@@ -2,22 +2,24 @@ package ir.ac.kntu.GameModes;
 
 import ir.ac.kntu.Ghosts.*;
 import ir.ac.kntu.PacMans.PacMan;
+import ir.ac.kntu.PacMans.PacMan_AI;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.scene.input.KeyEvent;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class SinglePlayer extends GameMode {
+public class SinglePlayer_AI extends GameMode {
     private Ghost[] ghosts;
     private PacMan pacman;
-    private static int deadCycle, freezeCycle;
-    private static int initialPacManX, initialPacManY;
+    private PacMan_AI pacman_AI;
+    private static int deadCycle, deadCycleAI, freezeCycle;
+    private static int initialPacManX, initialPacManY, initialAIX, initialAIY;
 
     //Init Block
     @Override
@@ -28,6 +30,7 @@ public class SinglePlayer extends GameMode {
         setDotCount();
         freezeCycle = 0;
         deadCycle = 0;
+        deadCycleAI = 0;
     }
 
     private void initGhosts() throws FileNotFoundException {
@@ -55,11 +58,18 @@ public class SinglePlayer extends GameMode {
     }
 
     private void initPacMan() throws FileNotFoundException {
+        int t;
         Scanner in = new Scanner(new File("src/main/java/ir/ac/kntu/Maps/DefaultPacManPositions.txt"));
+        t = in.nextInt();
+        t = in.nextInt();
         initialPacManX = in.nextInt();
         initialPacManY = in.nextInt();
         pacman = new PacMan();
         pacman.init(Map, initialPacManX, initialPacManY, 'N');
+        initialAIX = in.nextInt();
+        initialAIY = in.nextInt();
+        pacman_AI = new PacMan_AI();
+        pacman_AI.init(Map, initialAIX, initialAIY, 'N');
     }
     //End of Init Block
 
@@ -68,7 +78,6 @@ public class SinglePlayer extends GameMode {
     public void runOneCycle() {
         if (deadCycle == 0 && pacman.isAlive()) {
             char tile = pacman.move(Map);
-
             if (tile == '.') {
                 pacman.eat();
                 --dotCount;
@@ -79,37 +88,73 @@ public class SinglePlayer extends GameMode {
                 freezeCycle = 5;
                 for (Ghost ghost : ghosts) ghost.setActive(false);
             }
+        } else if (pacman.isAlive()) {
+            --deadCycle;
+            if (deadCycle == 0)
+                pacman.init(Map, initialPacManX, initialPacManY, 'N');
+        }
 
+        if (deadCycleAI == 0 && pacman_AI.isAlive()) {
+            pacman_AI.chooseDirection(Map, ghosts);
+            char tile = pacman_AI.move(Map);
+            if (tile == '.') {
+                pacman_AI.eat();
+                --dotCount;
+                if (dotCount == 0) {
+                    doneByWin = true;
+                }
+            } else if (tile == 'O') {
+                freezeCycle = 5;
+                for (Ghost ghost : ghosts) ghost.setActive(false);
+            }
+        } else if (pacman_AI.isAlive()) {
+            --deadCycleAI;
+            if (deadCycleAI == 0)
+                pacman_AI.init(Map, initialAIX, initialAIY, 'N');
+        }
+
+        if (freezeCycle == 0) {
             for (Ghost ghost : ghosts) {
-                if (ghost.getX() == pacman.getX() && ghost.getY() == pacman.getY()) {
+                if (deadCycle == 0 && ghost.getX() == pacman.getX() && ghost.getY() == pacman.getY()) {
                     pacman.die(Map);
                     deadCycle = 5;
+                }
+                if (deadCycleAI == 0 && ghost.getX() == pacman_AI.getX() && ghost.getY() == pacman_AI.getY()) {
+                    pacman_AI.die(Map);
+                    deadCycleAI = 5;
                 }
 
                 if (ghost.isGhostActive())
                     ghost.move(Map, ghosts);
 
-                if (ghost.getX() == pacman.getX() && ghost.getY() == pacman.getY()) {
+                if (deadCycle == 0 && ghost.getX() == pacman.getX() && ghost.getY() == pacman.getY()) {
                     pacman.die(Map);
                     deadCycle = 5;
                 }
-            }
-
-            if (freezeCycle > 0) {
-                --freezeCycle;
-                if (freezeCycle == 0) {
-                    for (Ghost ghost : ghosts) ghost.setActive(true);
+                if (deadCycleAI == 0 && ghost.getX() == pacman_AI.getX() && ghost.getY() == pacman_AI.getY()) {
+                    pacman_AI.die(Map);
+                    deadCycleAI = 5;
                 }
             }
         } else {
-            for (Ghost ghost : ghosts) ghost.move(Map, ghosts);
-            --deadCycle;
+            --freezeCycle;
+            if (freezeCycle == 0) {
+                for (Ghost ghost : ghosts) ghost.setActive(true);
+            }
 
-            if (deadCycle == 0)
-                pacman.init(Map, initialPacManX, initialPacManY, 'N');
+            for (Ghost ghost : ghosts) {
+                if (deadCycle == 0 && ghost.getX() == pacman.getX() && ghost.getY() == pacman.getY()) {
+                    pacman.die(Map);
+                    deadCycle = 5;
+                }
+                if (deadCycleAI == 0 && ghost.getX() == pacman_AI.getX() && ghost.getY() == pacman_AI.getY()) {
+                    pacman_AI.die(Map);
+                    deadCycleAI = 5;
+                }
+            }
         }
 
-        if (!pacman.isAlive())
+        if (!pacman.isAlive() && !pacman_AI.isAlive())
             doneByLose = true;
     }
 
@@ -197,6 +242,33 @@ public class SinglePlayer extends GameMode {
             }
             pane.getChildren().add(PacManView);
         }
+
+        if (deadCycleAI == 0 && pacman_AI.isAlive()) {
+            Image PacManImage;
+            ImageView PacManView;
+            PacManImage = new Image("file:src/main/java/ir/ac/kntu/Images/pacman.png");
+            PacManView = new ImageView(PacManImage);
+            PacManView.setFitWidth(PIC_SIZE);
+            PacManView.setFitHeight(PIC_SIZE);
+            PacManView.setX((pacman_AI.getX() - 1) * PIC_SIZE);
+            PacManView.setY((pacman_AI.getY() - 1) * PIC_SIZE);
+
+            switch (pacman_AI.getDirection()) {
+                case 'R':
+                    PacManView.setRotate(0);
+                    break;
+                case 'D':
+                    PacManView.setRotate(90);
+                    break;
+                case 'L':
+                    PacManView.setRotate(180);
+                    break;
+                case 'U':
+                default:
+                    PacManView.setRotate(270);
+            }
+            pane.getChildren().add(PacManView);
+        }
     }
 
     private void showLives(Pane pane) {
@@ -215,6 +287,16 @@ public class SinglePlayer extends GameMode {
 
         for (int i = 0; i < pacman.getLives() - 1; ++i) {
             block = new Image("file:src/main/java/ir/ac/kntu/Images/pacman_2.png");
+            blockView = new ImageView(block);
+            blockView.setFitWidth(PIC_SIZE);
+            blockView.setFitHeight(PIC_SIZE);
+            blockView.setX((i) * PIC_SIZE);
+            blockView.setY((Map[0].length - 2) * PIC_SIZE);
+            pane.getChildren().add(blockView);
+        }
+
+        for (int i = Map.length - 2 - pacman_AI.getLives() + 1; i < Map.length - 1; ++i) {
+            block = new Image("file:src/main/java/ir/ac/kntu/Images/pacman.png");
             blockView = new ImageView(block);
             blockView.setFitWidth(PIC_SIZE);
             blockView.setFitHeight(PIC_SIZE);

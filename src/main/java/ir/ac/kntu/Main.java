@@ -2,6 +2,7 @@ package ir.ac.kntu;
 
 import ir.ac.kntu.GameModes.GameMode;
 import ir.ac.kntu.GameModes.SinglePlayer;
+import ir.ac.kntu.GameModes.SinglePlayer_AI;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -15,7 +16,7 @@ public class Main extends Application {
     private static GameMode GM;
 
     public static void main(String[] args) throws FileNotFoundException {
-        GM = new SinglePlayer();
+        GM = new SinglePlayer_AI();
         GM.init();
         launch(args);
     }
@@ -27,7 +28,7 @@ public class Main extends Application {
             GM.keyEventHandler(event);
         });
 
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(259), e -> run(stage)));
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(300), e -> run(stage)));
         tl.setCycleCount(Timeline.INDEFINITE);
         GM.show(stage);
         tl.play();
