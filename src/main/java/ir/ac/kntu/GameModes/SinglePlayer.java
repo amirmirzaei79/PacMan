@@ -17,6 +17,7 @@ public class SinglePlayer extends GameMode {
     private Ghost[] ghosts;
     private PacMan pacman;
     private static int deadCycle, freezeCycle;
+    private static int initialPacManX, initialPacManY;
 
     //Init Block
     @Override
@@ -55,10 +56,10 @@ public class SinglePlayer extends GameMode {
 
     private void initPacMan() throws FileNotFoundException {
         Scanner in = new Scanner(new File("src/main/java/ir/ac/kntu/Maps/DefaultPacManPositions.txt"));
-        int x = in.nextInt();
-        int y = in.nextInt();
+        initialPacManX = in.nextInt();
+        initialPacManY = in.nextInt();
         pacman = new PacMan();
-        pacman.init(Map, x, y, 'N');
+        pacman.init(Map, initialPacManX, initialPacManY, 'N');
     }
     //End of Init Block
 
@@ -105,7 +106,7 @@ public class SinglePlayer extends GameMode {
             --deadCycle;
 
             if (deadCycle == 0)
-                pacman.init(Map, Map.length / 2, Map[0].length / 2, 'N');
+                pacman.init(Map, initialPacManX, initialPacManY, 'N');
         }
 
         if (!pacman.isAlive())
