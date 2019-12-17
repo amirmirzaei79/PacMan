@@ -63,7 +63,7 @@ public class SinglePlayer extends GameMode {
 
             for (Ghost ghost : ghosts) {
                 if (ghost.getX() == pacman.getX() && ghost.getY() == pacman.getY()) {
-                    pacman.die();
+                    pacman.die(Map);
                     deadCycle = 5;
                 }
 
@@ -71,7 +71,7 @@ public class SinglePlayer extends GameMode {
                     ghost.move(Map, ghosts);
 
                 if (ghost.getX() == pacman.getX() && ghost.getY() == pacman.getY()) {
-                    pacman.die();
+                    pacman.die(Map);
                     deadCycle = 5;
                 }
             }

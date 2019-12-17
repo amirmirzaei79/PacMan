@@ -82,7 +82,8 @@ public class PacMan {
         return lives;
     }
 
-    public void die() {
+    public void die(char[][] Map) {
+        Map[x][y] = ' ';
         --lives;
         if (lives <= 0)
             isAlive = false;
