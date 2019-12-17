@@ -1,8 +1,8 @@
 package ir.ac.kntu.Ghosts;
 
 public class RandomGhost extends Ghost {
-    public RandomGhost(char[][] Map) {
-        super(Map);
+    public RandomGhost(char[][] Map, int x, int y) {
+        super(Map, x, y);
         imagePath = "file:src/main/java/ir/ac/kntu/Images/Pink_Ghost.png";
     }
 

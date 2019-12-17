@@ -9,7 +9,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.input.KeyEvent;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class SinglePlayer extends GameMode {
     private Ghost[] ghosts;
@@ -27,14 +29,27 @@ public class SinglePlayer extends GameMode {
         deadCycle = 0;
     }
 
-    private void initGhosts() {
+    private void initGhosts() throws FileNotFoundException {
         {
+            int x, y;
+            Scanner in = new Scanner(new File("src/main/java/ir/ac/kntu/Maps/DefaultGhostPositions.txt"));
+
             ghosts = new Ghost[5];
-            ghosts[0] = new HorizontalRandomGhost(Map);
-            ghosts[1] = new VerticalRandomGhost(Map);
-            ghosts[2] = new RandomGhost(Map);
-            ghosts[3] = new GreedyGhost(Map);
-            ghosts[4] = new SmartGhost(Map);
+            x = in.nextInt();
+            y = in.nextInt();
+            ghosts[0] = new HorizontalRandomGhost(Map, x, y);
+            x = in.nextInt();
+            y = in.nextInt();
+            ghosts[1] = new VerticalRandomGhost(Map, x, y);
+            x = in.nextInt();
+            y = in.nextInt();
+            ghosts[2] = new RandomGhost(Map, x, y);
+            x = in.nextInt();
+            y = in.nextInt();
+            ghosts[3] = new GreedyGhost(Map, x, y);
+            x = in.nextInt();
+            y = in.nextInt();
+            ghosts[4] = new SmartGhost(Map, x, y);
         }
     }
 
@@ -194,7 +209,7 @@ public class SinglePlayer extends GameMode {
             pane.getChildren().add(blockView);
         }
 
-        for (int i = 0; i < pacman.getLives(); ++i) {
+        for (int i = 0; i < pacman.getLives() - 1; ++i) {
             block = new Image("file:src/main/java/ir/ac/kntu/Images/pacman_2.png");
             blockView = new ImageView(block);
             blockView.setFitWidth(PIC_SIZE);

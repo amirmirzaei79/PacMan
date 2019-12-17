@@ -1,8 +1,8 @@
 package ir.ac.kntu.Ghosts;
 
 public class GreedyGhost extends Ghost {
-    public GreedyGhost(char[][] Map) {
-        super(Map);
+    public GreedyGhost(char[][] Map, int x, int y) {
+        super(Map, x, y);
         imagePath = "file:src/main/java/ir/ac/kntu/Images/Orange_Ghost.png";
     }
 

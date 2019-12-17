@@ -1,19 +1,42 @@
 package ir.ac.kntu.Ghosts;
 
+import java.util.Map;
+
 public class Ghost {
     protected int x, y;
     protected boolean isActive;
     protected String imagePath;
 
-    public Ghost(char[][] Map) {
-        init(Map);
+    public Ghost(char[][] Map, int x, int y) {
+        init(Map, x, y);
     }
 
-    public void init(char[][] Map) {
-        do {
-            x = (int) (Math.random() * (Map.length - 2)) + 1;
-            y = (int) (Math.random() * (Map[0].length - 2)) + 1;
-        } while (Map[x][y] == '#');
+    public void init(char[][] Map, int x, int y) {
+        if (x >= Map.length)
+            x = Map.length - 1;
+        if (x < 0)
+            x = 0;
+        if (y >= Map[x].length)
+            y = Map[x].length - 1;
+        if (y < 0)
+            y = 0;
+        while (Map[x][y] == '#')
+        {
+            x += (int)(Math.random() * 3) - 1;
+            y += (int)(Math.random() * 3) - 1;
+
+            if (x >= Map.length)
+                x = Map.length - 1;
+            if (x < 0)
+                x = 0;
+            if (y >= Map[x].length)
+                y = Map[x].length - 1;
+            if (y < 0)
+                y = 0;
+        }
+        this.x = x;
+        this.y = y;
+
         isActive = true;
     }
 

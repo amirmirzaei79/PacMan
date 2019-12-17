@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.PriorityQueue;
 
 public class SmartGhost extends Ghost {
-    public SmartGhost(char[][] Map) {
-        super(Map);
+    public SmartGhost(char[][] Map, int x, int y) {
+        super(Map, x, y);
         imagePath = "file:src/main/java/ir/ac/kntu/Images/Red_Ghost.png";
     }
 

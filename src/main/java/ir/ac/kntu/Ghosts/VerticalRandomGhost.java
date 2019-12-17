@@ -1,13 +1,8 @@
 package ir.ac.kntu.Ghosts;
 
 public class VerticalRandomGhost extends Ghost {
-    public VerticalRandomGhost(char[][] Map) {
-        super(Map);
-        while (Map[x][y + 1] == '#' && Map[x][y - 1] == '#') {
-            x = (int) (Math.random() * 15) + 1;
-            y = (int) (Math.random() * 10) + 1;
-        }
-
+    public VerticalRandomGhost(char[][] Map, int x, int y) {
+        super(Map, x, y);
         imagePath = "file:src/main/java/ir/ac/kntu/Images/Green_Ghost.png";
     }
 

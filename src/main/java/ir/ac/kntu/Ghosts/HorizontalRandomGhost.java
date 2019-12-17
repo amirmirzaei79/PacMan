@@ -1,13 +1,8 @@
 package ir.ac.kntu.Ghosts;
 
 public class HorizontalRandomGhost extends Ghost {
-    public HorizontalRandomGhost(char[][] Map) {
-        super(Map);
-        while (Map[x + 1][y] == '#' && Map[x - 1][y] == '#') {
-            x = (int) (Math.random() * 15) + 1;
-            y = (int) (Math.random() * 10) + 1;
-        }
-
+    public HorizontalRandomGhost(char[][] Map, int x, int y) {
+        super(Map, x, y);
         imagePath = "file:src/main/java/ir/ac/kntu/Images/Blue_Ghost.png";
     }
 
@@ -21,8 +16,9 @@ public class HorizontalRandomGhost extends Ghost {
         else
             direction = 1;
 
-        if (Map[x + direction][y] == '#')
+        if (Map[x + direction][y] == '#') {
             direction *= -1;
+        }
 
         if (isActive && Map[x + direction][y] != '#')
             x += direction;
