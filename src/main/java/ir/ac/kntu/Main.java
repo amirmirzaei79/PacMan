@@ -3,6 +3,7 @@ package ir.ac.kntu;
 import ir.ac.kntu.GameModes.GameMode;
 import ir.ac.kntu.GameModes.SinglePlayer;
 import ir.ac.kntu.GameModes.SinglePlayer_AI;
+import ir.ac.kntu.GameModes.TwoPlayer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -16,7 +17,7 @@ public class Main extends Application {
     private static GameMode GM;
 
     public static void main(String[] args) throws FileNotFoundException {
-        GM = new SinglePlayer_AI();
+        GM = new TwoPlayer();
         GM.init();
         launch(args);
     }
