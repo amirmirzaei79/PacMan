@@ -95,6 +95,8 @@ public class PacMan implements Serializable {
         ++points;
     }
 
+    public void addLife() { ++lives; }
+
     public void setDirection(char direction) {
         this.direction = direction;
     }
