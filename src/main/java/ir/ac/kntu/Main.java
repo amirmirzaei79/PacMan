@@ -14,7 +14,8 @@ import javafx.util.Duration;
 
 import java.io.FileNotFoundException;
 
-enum GameModeName {SinglePlayer, SinglePlayer_AI, TwoPlayer, TwoPlayer_Compete}
+enum GameModeName {SinglePlayer, SinglePlayer_AI, TwoPlayer_CoOp, TwoPlayer_Compete}
+enum Status {PreGame, Running, Paused, GameOver}
 
 public class Main extends Application {
     private static GameMode GM;
@@ -24,10 +25,6 @@ public class Main extends Application {
         GM = new TwoPlayer();
         GM.init();
         launch(args);
-    }
-
-    private void newGame() {
-
     }
 
     @Override
