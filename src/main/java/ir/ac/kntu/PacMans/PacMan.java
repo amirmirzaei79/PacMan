@@ -1,6 +1,8 @@
 package ir.ac.kntu.PacMans;
 
-public class PacMan {
+import java.io.Serializable;
+
+public class PacMan implements Serializable {
     protected int x, y;
     protected char direction;
     protected boolean isAlive;

@@ -1,8 +1,9 @@
 package ir.ac.kntu.Ghosts;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class Ghost {
+public class Ghost implements Serializable {
     protected int x, y;
     protected boolean isActive;
     protected String imagePath;

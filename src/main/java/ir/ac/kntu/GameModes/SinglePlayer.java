@@ -11,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.Scanner;
 
 public class SinglePlayer extends GameMode {
@@ -30,32 +31,111 @@ public class SinglePlayer extends GameMode {
         deadCycle = 0;
     }
 
-    private void initGhosts() throws FileNotFoundException {
-        {
-            int x, y;
-            Scanner in = new Scanner(new File("src/main/java/ir/ac/kntu/Maps/DefaultGhostPositions.txt"));
+    @Override
+    public void init(int difficulty, int mapNumber) throws FileNotFoundException {
+        initMap(mapNumber);
+        initGhosts(difficulty, mapNumber);
+        initPacMan(mapNumber);
+        setDotCount();
+        freezeCycle = 0;
+        deadCycle = 0;
+    }
 
-            ghosts = new Ghost[5];
-            x = in.nextInt();
-            y = in.nextInt();
-            ghosts[0] = new HorizontalRandomGhost(Map, x, y);
-            x = in.nextInt();
-            y = in.nextInt();
-            ghosts[1] = new VerticalRandomGhost(Map, x, y);
-            x = in.nextInt();
-            y = in.nextInt();
-            ghosts[2] = new RandomGhost(Map, x, y);
-            x = in.nextInt();
-            y = in.nextInt();
-            ghosts[3] = new GreedyGhost(Map, x, y);
-            x = in.nextInt();
-            y = in.nextInt();
-            ghosts[4] = new SmartGhost(Map, x, y);
+    private void initGhosts() throws FileNotFoundException {
+        int x, y;
+        Scanner in = new Scanner(new File("src/main/java/ir/ac/kntu/Maps/DefaultGhostPositions.txt"));
+
+        ghosts = new Ghost[5];
+        x = in.nextInt();
+        y = in.nextInt();
+        ghosts[0] = new HorizontalRandomGhost(Map, x, y);
+        x = in.nextInt();
+        y = in.nextInt();
+        ghosts[1] = new VerticalRandomGhost(Map, x, y);
+        x = in.nextInt();
+        y = in.nextInt();
+        ghosts[2] = new RandomGhost(Map, x, y);
+        x = in.nextInt();
+        y = in.nextInt();
+        ghosts[3] = new GreedyGhost(Map, x, y);
+        x = in.nextInt();
+        y = in.nextInt();
+        ghosts[4] = new SmartGhost(Map, x, y);
+    }
+
+    private void initGhosts(int difficulty, int mapNumber) throws FileNotFoundException {
+        int x, y;
+        Scanner in = new Scanner(new File("src/main/java/ir/ac/kntu/Maps/Map" + mapNumber + "_GhostPositions.txt"));
+
+        switch (difficulty) {
+            case 0:
+                ghosts = new Ghost[5];
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[0] = new HorizontalRandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[1] = new VerticalRandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[2] = new RandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[3] = new RandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[4] = new RandomGhost(Map, x, y);
+                break;
+            case 1:
+                ghosts = new Ghost[5];
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[0] = new HorizontalRandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[1] = new VerticalRandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[2] = new RandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[3] = new GreedyGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[4] = new SmartGhost(Map, x, y);
+                break;
+            case 2:
+                ghosts = new Ghost[5];
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[0] = new RandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[1] = new GreedyGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[2] = new GreedyGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[3] = new SmartGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[4] = new SmartGhost(Map, x, y);
+                break;
+
         }
     }
 
     private void initPacMan() throws FileNotFoundException {
         Scanner in = new Scanner(new File("src/main/java/ir/ac/kntu/Maps/DefaultPacManPositions.txt"));
+        initialPacManX = in.nextInt();
+        initialPacManY = in.nextInt();
+        pacman = new PacMan();
+        pacman.init(Map, initialPacManX, initialPacManY, 'N');
+    }
+
+    private void initPacMan(int mapNumber) throws FileNotFoundException {
+        Scanner in = new Scanner(new File("src/main/java/ir/ac/kntu/Maps/Map" + mapNumber + "_PacManPositions.txt"));
         initialPacManX = in.nextInt();
         initialPacManY = in.nextInt();
         pacman = new PacMan();
@@ -81,7 +161,7 @@ public class SinglePlayer extends GameMode {
             }
 
             for (Ghost ghost : ghosts) {
-                if (ghost.getX() == pacman.getX() && ghost.getY() == pacman.getY()) {
+                if (ghost.getX() == pacman.getX() && ghost.getY() == pacman.getY() && deadCycle == 0) {
                     pacman.die(Map);
                     deadCycle = 5;
                 }
@@ -89,7 +169,7 @@ public class SinglePlayer extends GameMode {
                 if (ghost.isGhostActive())
                     ghost.move(Map, ghosts);
 
-                if (ghost.getX() == pacman.getX() && ghost.getY() == pacman.getY()) {
+                if (ghost.getX() == pacman.getX() && ghost.getY() == pacman.getY() && deadCycle == 0) {
                     pacman.die(Map);
                     deadCycle = 5;
                 }
@@ -224,4 +304,11 @@ public class SinglePlayer extends GameMode {
         }
     }
     //End of Show Block
+
+    @Override
+    public int[] getScores() {
+        int[] scores = new int[1];
+        scores[0] = pacman.getPoints();
+        return scores;
+    }
 }

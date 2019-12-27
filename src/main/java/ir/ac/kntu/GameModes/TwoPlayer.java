@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.Scanner;
 
 public class TwoPlayer extends GameMode {
@@ -26,6 +27,17 @@ public class TwoPlayer extends GameMode {
         initMap();
         initGhosts();
         initPacMan();
+        setDotCount();
+        freezeCycle = 0;
+        deadCycle_1 = 0;
+        deadCycle_2 = 0;
+    }
+
+    @Override
+    public void init(int difficulty, int mapNumber) throws FileNotFoundException {
+        initMap(mapNumber);
+        initGhosts(difficulty, mapNumber);
+        initPacMan(mapNumber);
         setDotCount();
         freezeCycle = 0;
         deadCycle_1 = 0;
@@ -56,6 +68,69 @@ public class TwoPlayer extends GameMode {
         }
     }
 
+    private void initGhosts(int difficulty, int mapNumber) throws FileNotFoundException {
+        int x, y;
+        Scanner in = new Scanner(new File("src/main/java/ir/ac/kntu/Maps/Map" + mapNumber + "_GhostPositions.txt"));
+
+        switch (difficulty) {
+            case 0:
+                ghosts = new Ghost[5];
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[0] = new HorizontalRandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[1] = new VerticalRandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[2] = new RandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[3] = new RandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[4] = new RandomGhost(Map, x, y);
+                break;
+            case 1:
+                ghosts = new Ghost[5];
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[0] = new HorizontalRandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[1] = new VerticalRandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[2] = new RandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[3] = new GreedyGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[4] = new SmartGhost(Map, x, y);
+                break;
+            case 2:
+                ghosts = new Ghost[5];
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[0] = new RandomGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[1] = new GreedyGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[2] = new GreedyGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[3] = new SmartGhost(Map, x, y);
+                x = in.nextInt();
+                y = in.nextInt();
+                ghosts[4] = new SmartGhost(Map, x, y);
+                break;
+
+        }
+    }
+
     private void initPacMan() throws FileNotFoundException {
         int t;
         Scanner in = new Scanner(new File("src/main/java/ir/ac/kntu/Maps/DefaultPacManPositions.txt"));
@@ -69,6 +144,22 @@ public class TwoPlayer extends GameMode {
         initialPacMan_2_Y = in.nextInt();
         pacman_2 = new PacMan();
         pacman_2.init(Map, initialPacMan_2_X, initialPacMan_2_Y, 'N');
+    }
+
+    private void initPacMan(int mapNumber) throws FileNotFoundException {
+        int t;
+        Scanner in = new Scanner(new File("src/main/java/ir/ac/kntu/Maps/Map" + mapNumber + "_PacManPositions.txt"));
+        t = in.nextInt();
+        t = in.nextInt();
+        initialPacMan_1_X = in.nextInt();
+        initialPacMan_1_Y = in.nextInt();
+        pacman_1 = new PacMan();
+        pacman_1.init(Map, initialPacMan_1_X, initialPacMan_1_Y, 'N');
+        initialPacMan_2_X = in.nextInt();
+        initialPacMan_2_Y = in.nextInt();
+        pacman_2 = new PacMan();
+        pacman_2.init(Map, initialPacMan_2_X, initialPacMan_2_Y, 'N');
+
     }
     //End of Init Block
 
@@ -113,11 +204,11 @@ public class TwoPlayer extends GameMode {
 
         if (freezeCycle == 0) {
             for (Ghost ghost : ghosts) {
-                if (deadCycle_1 == 0 && ghost.getX() == pacman_1.getX() && ghost.getY() == pacman_1.getY()) {
+                if (deadCycle_1 == 0 && ghost.getX() == pacman_1.getX() && ghost.getY() == pacman_1.getY() && deadCycle_1 == 0) {
                     pacman_1.die(Map);
                     deadCycle_1 = 5;
                 }
-                if (deadCycle_2 == 0 && ghost.getX() == pacman_2.getX() && ghost.getY() == pacman_2.getY()) {
+                if (deadCycle_2 == 0 && ghost.getX() == pacman_2.getX() && ghost.getY() == pacman_2.getY() && deadCycle_2 == 0) {
                     pacman_2.die(Map);
                     deadCycle_2 = 5;
                 }
@@ -125,11 +216,11 @@ public class TwoPlayer extends GameMode {
                 if (ghost.isGhostActive())
                     ghost.move(Map, ghosts);
 
-                if (deadCycle_1 == 0 && ghost.getX() == pacman_1.getX() && ghost.getY() == pacman_1.getY()) {
+                if (deadCycle_1 == 0 && ghost.getX() == pacman_1.getX() && ghost.getY() == pacman_1.getY() && deadCycle_1 == 0) {
                     pacman_1.die(Map);
                     deadCycle_1 = 5;
                 }
-                if (deadCycle_2 == 0 && ghost.getX() == pacman_2.getX() && ghost.getY() == pacman_2.getY()) {
+                if (deadCycle_2 == 0 && ghost.getX() == pacman_2.getX() && ghost.getY() == pacman_2.getY() && deadCycle_2 == 0) {
                     pacman_2.die(Map);
                     deadCycle_2 = 5;
                 }
@@ -320,4 +411,12 @@ public class TwoPlayer extends GameMode {
         }
     }
     //End of Show Block
+
+    @Override
+    public int[] getScores() {
+        int[] scores = new int[2];
+        scores[0] = pacman_1.getPoints();
+        scores[1] = pacman_2.getPoints();
+        return scores;
+    }
 }
