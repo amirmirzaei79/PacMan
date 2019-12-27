@@ -4,6 +4,7 @@ import ir.ac.kntu.GameModes.GameMode;
 import ir.ac.kntu.GameModes.SinglePlayer;
 import ir.ac.kntu.GameModes.SinglePlayer_AI;
 import ir.ac.kntu.GameModes.TwoPlayer;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -13,8 +14,11 @@ import javafx.util.Duration;
 
 import java.io.FileNotFoundException;
 
+enum GameModeName {SinglePlayer, SinglePlayer_AI, TwoPlayer, TwoPlayer_Compete}
+
 public class Main extends Application {
     private static GameMode GM;
+    private Timeline tl;
 
     public static void main(String[] args) throws FileNotFoundException {
         GM = new TwoPlayer();
@@ -22,14 +26,19 @@ public class Main extends Application {
         launch(args);
     }
 
+    private void newGame() {
+
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         stage.setResizable(false);
         stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            GM.keyEventHandler(event);
+            if (tl.getStatus() == Animation.Status.RUNNING)
+                GM.keyEventHandler(event);
         });
 
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(300), e -> run(stage)));
+        tl = new Timeline(new KeyFrame(Duration.millis(300), e -> run(stage)));
         tl.setCycleCount(Timeline.INDEFINITE);
         GM.show(stage);
         tl.play();
@@ -39,6 +48,7 @@ public class Main extends Application {
         GM.runOneCycle();
         GM.show(stage);
         if (GM.isDone())
-            stage.close();
+//            stage.close();
+            tl.stop();
     }
 }
