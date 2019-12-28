@@ -31,11 +31,15 @@ In all both single player modes pacman is controlled using arrow keys.
 
 In Two Player modes left player controls his pacman using **WASD keys** and right player using **arrow keys**.
 
+------
+
 
 
 Amir Mirzaei - <amir.mirzaei1379@gmail.com>
 
 
+
+------
 
 Another example of game. (Single Player - Map 1 - Easy mode)
 
