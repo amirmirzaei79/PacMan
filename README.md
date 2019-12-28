@@ -39,7 +39,7 @@ Amir Mirzaei - <amir.mirzaei1379@gmail.com>
 
 Another example of game. (Single Player - Map 1 - Easy mode)
 
-<img src="/home/amir/Desktop/AP/Projects/P2/p2-pacman/README_Pics/Game_Running_2.png" alt="Game_Running_2" style="zoom:67%;" />
+<img src="./README_Pics/Game_Running_2.png" alt="Game_Running_2" style="zoom:67%;" />
 
 ## Projects Details
 
